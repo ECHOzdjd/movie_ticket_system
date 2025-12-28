@@ -1,0 +1,116 @@
+services:
+  # MySQL数据库
+  mysql:
+    image: mysql:8.0
+    container_name: movie-ticket-mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: movie_ticket
+      MYSQL_USER: movie_user
+      MYSQL_PASSWORD: movie_pass
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - ./sql:/docker-entrypoint-initdb.d
+    command: --default-authentication-plugin=mysql_native_password
+    networks:
+      - movie-network
+
+  # Redis
+  redis:
+    image: redis:7-alpine
+    container_name: movie-ticket-redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    networks:
+      - movie-network
+
+  # Nacos Server
+  nacos:
+    image: nacos/nacos-server:v2.2.3
+    container_name: movie-ticket-nacos
+    environment:
+      MODE: standalone
+      PREFER_HOST_MODE: hostname
+    ports:
+      - "8848:8848"
+      - "9848:9848"
+    depends_on:
+      - mysql
+    networks:
+      - movie-network
+
+  # 影片资源服务
+  movie-resource-service:
+    build:
+      context: ./movie-resource-service
+      dockerfile: Dockerfile
+    container_name: movie-resource-service
+    environment:
+      NACOS_SERVER_ADDR: nacos:8848
+      MYSQL_HOST: mysql
+      MYSQL_PORT: 3306
+      MYSQL_DATABASE: movie_ticket
+      MYSQL_USERNAME: root
+      MYSQL_PASSWORD: root
+    ports:
+      - "8081:8081"
+    depends_on:
+      - mysql
+      - nacos
+    networks:
+      - movie-network
+
+  # 订单业务服务
+  order-biz-service:
+    build:
+      context: ./order-biz-service
+      dockerfile: Dockerfile
+    container_name: order-biz-service
+    environment:
+      NACOS_SERVER_ADDR: nacos:8848
+      MYSQL_HOST: mysql
+      MYSQL_PORT: 3306
+      MYSQL_DATABASE: movie_ticket
+      MYSQL_USERNAME: root
+      MYSQL_PASSWORD: root
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+    ports:
+      - "8082:8082"
+    depends_on:
+      - mysql
+      - redis
+      - nacos
+      - movie-resource-service
+    networks:
+      - movie-network
+
+  # 网关服务
+  gateway-service:
+    build:
+      context: ./gateway-service
+      dockerfile: Dockerfile
+    container_name: gateway-service
+    environment:
+      NACOS_SERVER_ADDR: nacos:8848
+    ports:
+      - "9999:9999"
+    depends_on:
+      - nacos
+      - movie-resource-service
+      - order-biz-service
+    networks:
+      - movie-network
+
+volumes:
+  mysql_data:
+  redis_data:
+
+networks:
+  movie-network:
+    driver: bridge
+

@@ -1,0 +1,334 @@
+{
+	"info": {
+		"_postman_id": "movie-ticket-system-2025",
+		"name": "电影票务系统 API",
+		"description": "电影票购票与选座系统的完整 API 测试集合",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "用户服务",
+			"item": [
+				{
+					"name": "用户注册",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"username\": \"testuser\",\n  \"password\": \"123456\",\n  \"phone\": \"13800138000\",\n  \"email\": \"test@example.com\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/user/register",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"user",
+								"register"
+							]
+						},
+						"description": "注册新用户"
+					},
+					"response": []
+				},
+				{
+					"name": "用户登录",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = pm.response.json();",
+									"if (jsonData.code === 200 && jsonData.data) {",
+									"    pm.environment.set(\"token\", jsonData.data.token);",
+									"    pm.environment.set(\"userId\", jsonData.data.userId);",
+									"    console.log(\"Token 已保存:\", jsonData.data.token);",
+									"    console.log(\"UserId 已保存:\", jsonData.data.userId);",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"username\": \"admin\",\n  \"password\": \"123456\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/user/login",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"user",
+								"login"
+							]
+						},
+						"description": "用户登录，自动保存 token 和 userId 到环境变量"
+					},
+					"response": []
+				},
+				{
+					"name": "获取用户信息",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "X-User-Id",
+								"value": "{{userId}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/user/info",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"user",
+								"info"
+							]
+						},
+						"description": "获取当前用户信息（需要先登录）"
+					},
+					"response": []
+				}
+			],
+			"description": "用户注册、登录、信息管理"
+		},
+		{
+			"name": "电影服务",
+			"item": [
+				{
+					"name": "查询电影列表",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/movie/list",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"movie",
+								"list"
+							]
+						},
+						"description": "获取所有上映电影列表"
+					},
+					"response": []
+				},
+				{
+					"name": "查询电影详情",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/movie/1",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"movie",
+								"1"
+							]
+						},
+						"description": "根据电影 ID 查询详情"
+					},
+					"response": []
+				},
+				{
+					"name": "查询影院列表",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/cinema/list",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"cinema",
+								"list"
+							]
+						},
+						"description": "获取所有影院列表"
+					},
+					"response": []
+				},
+				{
+					"name": "查询影院详情",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/cinema/1",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"cinema",
+								"1"
+							]
+						},
+						"description": "根据影院 ID 查询详情"
+					},
+					"response": []
+				},
+				{
+					"name": "查询电影排期",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/schedule/movie/1",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"schedule",
+								"movie",
+								"1"
+							]
+						},
+						"description": "根据电影 ID 查询所有排期"
+					},
+					"response": []
+				},
+				{
+					"name": "查询排期详情",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/schedule/1",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"schedule",
+								"1"
+							]
+						},
+						"description": "根据排期 ID 查询详情"
+					},
+					"response": []
+				}
+			],
+			"description": "电影、影院、排期信息查询"
+		},
+		{
+			"name": "订单服务",
+			"item": [
+				{
+					"name": "查询座位图",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/seat/map/1",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"seat",
+								"map",
+								"1"
+							]
+						},
+						"description": "根据排期 ID 查询座位图"
+					},
+					"response": []
+				},
+				{
+					"name": "锁定座位",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "X-User-Id",
+								"value": "{{userId}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"scheduleId\": 1,\n  \"seatNumbers\": [\"A1\", \"A2\"]\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/seat/lock",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"seat",
+								"lock"
+							]
+						},
+						"description": "锁定指定座位（需要登录）"
+					},
+					"response": []
+				},
+				{
+					"name": "创建订单",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "X-User-Id",
+								"value": "{{userId}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"scheduleId\": 1,\n  \"seatNumbers\": [\"B1\", \"B2\"]\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/order/create",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"order",
+								"create"
+							]
+						},
+						"description": "创建订单（需要登录）"
+					},
+					"response": []
+				}
+			],
+			"description": "座位查询、锁定、订单创建"
+		}
+	],
+	"variable": [
+		{
+			"key": "baseUrl",
+			"value": "http://localhost:9999/api",
+			"type": "string"
+		}
+	]
+}

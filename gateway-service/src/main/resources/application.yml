@@ -1,0 +1,65 @@
+server:
+  port: 9999
+
+spring:
+  application:
+    name: gateway-service
+  config:
+    import: optional:nacos:${spring.application.name}.yml
+  cloud:
+    nacos:
+      discovery:
+        server-addr: ${NACOS_SERVER_ADDR:localhost:8848}
+        namespace: ${NACOS_NAMESPACE:dev}
+        group: ${NACOS_GROUP:DEFAULT_GROUP}
+      config:
+        server-addr: ${NACOS_SERVER_ADDR:localhost:8848}
+        namespace: ${NACOS_NAMESPACE:dev}
+        group: ${NACOS_GROUP:DEFAULT_GROUP}
+        file-extension: yml
+        import-check:
+          enabled: false
+    gateway:
+      discovery:
+        locator:
+          enabled: true
+          lower-case-service-id: true
+      routes:
+        # 用户服务路由
+        - id: order-biz-service
+          uri: lb://order-biz-service
+          predicates:
+            - Path=/api/user/**, /api/order/**, /api/seat/**
+          filters:
+            - StripPrefix=1
+        # 影片资源服务路由
+        - id: movie-resource-service
+          uri: lb://movie-resource-service
+          predicates:
+            - Path=/api/movie/**, /api/cinema/**, /api/schedule/**
+          filters:
+            - StripPrefix=1
+      globalcors:
+        cors-configurations:
+          '[/**]':
+            allowedOriginPatterns: "*"
+            allowedMethods:
+              - GET
+              - POST
+              - PUT
+              - DELETE
+              - OPTIONS
+            allowedHeaders: "*"
+            allowCredentials: true
+            maxAge: 3600
+
+# JWT配置
+jwt:
+  secret: movie-ticket-system-secret-key-2024-very-long-secret-key-for-security
+  expiration: 86400000 # 24小时
+
+logging:
+  level:
+    com.movie: DEBUG
+    org.springframework.cloud.gateway: DEBUG
+
