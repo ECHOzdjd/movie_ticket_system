@@ -9,7 +9,7 @@ services:
       MYSQL_USER: movie_user
       MYSQL_PASSWORD: movie_pass
     ports:
-      - "3306:3306"
+      - "${MYSQL_PUBLISHED_PORT:-3306}:3306"
     volumes:
       - mysql_data:/var/lib/mysql
       - ./sql:/docker-entrypoint-initdb.d

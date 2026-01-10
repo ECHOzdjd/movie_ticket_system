@@ -1,0 +1,36 @@
+{
+  "timestamp": "20260111-004541",
+  "gateway": "http://localhost:9999/api",
+  "api": "seat_lock",
+  "mode": "conflict",
+  "scheduleId": 1,
+  "concurrency": 20,
+  "requests": 200,
+  "timeout": 10.0,
+  "auth": {
+    "username": "load_1768063538_xaji0y6d",
+    "userId": 0
+  },
+  "summary": {
+    "total": 200,
+    "ok": 1,
+    "fail": 199,
+    "success_rate": 0.5,
+    "latency_ms": {
+      "avg": 202.47857555003975,
+      "p50": 178.90935950072162,
+      "p95": 394.5619262002763,
+      "p99": 451.1247829594321,
+      "max": 496.87547699977586
+    },
+    "http_status_dist": {
+      "200": 1,
+      "500": 199
+    },
+    "business_code_dist": {
+      "200": 1
+    },
+    "duration_s": 2.1473368360002496,
+    "rps": 93.13862485241545
+  }
+}

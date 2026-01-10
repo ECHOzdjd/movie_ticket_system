@@ -1,0 +1,35 @@
+{
+  "timestamp": "20260111-004556",
+  "gateway": "http://localhost:9999/api",
+  "api": "order_create",
+  "mode": "unique",
+  "scheduleId": 1,
+  "concurrency": 20,
+  "requests": 200,
+  "timeout": 10.0,
+  "auth": {
+    "username": "load_1768063552_xaji0y6d",
+    "userId": 0
+  },
+  "summary": {
+    "total": 200,
+    "ok": 200,
+    "fail": 0,
+    "success_rate": 100.0,
+    "latency_ms": {
+      "avg": 352.9100665948954,
+      "p50": 331.92781999969156,
+      "p95": 576.3218434008193,
+      "p99": 696.683788309928,
+      "max": 837.7891760010243
+    },
+    "http_status_dist": {
+      "200": 200
+    },
+    "business_code_dist": {
+      "200": 200
+    },
+    "duration_s": 3.627982993000842,
+    "rps": 55.12705004015811
+  }
+}

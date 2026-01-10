@@ -1,0 +1,32 @@
+{
+  "timestamp": "20260111-003807",
+  "gateway": "http://localhost:9999/api",
+  "api": "movie_list",
+  "mode": "unique",
+  "scheduleId": 1,
+  "concurrency": 10,
+  "requests": 100,
+  "timeout": 10.0,
+  "auth": {},
+  "summary": {
+    "total": 100,
+    "ok": 100,
+    "fail": 0,
+    "success_rate": 100.0,
+    "latency_ms": {
+      "avg": 114.31526364998717,
+      "p50": 92.29492249960458,
+      "p95": 329.8542895007813,
+      "p99": 333.5109676907632,
+      "max": 335.29184800045186
+    },
+    "http_status_dist": {
+      "200": 100
+    },
+    "business_code_dist": {
+      "200": 100
+    },
+    "duration_s": 1.1958882860008089,
+    "rps": 83.61985075914721
+  }
+}
